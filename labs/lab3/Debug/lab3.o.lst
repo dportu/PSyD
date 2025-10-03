@@ -1,0 +1,255 @@
+   1              		.cpu arm7tdmi
+   2              		.fpu softvfp
+   3              		.eabi_attribute 20, 1
+   4              		.eabi_attribute 21, 1
+   5              		.eabi_attribute 23, 3
+   6              		.eabi_attribute 24, 1
+   7              		.eabi_attribute 25, 1
+   8              		.eabi_attribute 26, 1
+   9              		.eabi_attribute 30, 6
+  10              		.eabi_attribute 18, 4
+  11              		.file	"lab3.c"
+  21              	.Ltext0:
+  22              		.file 1 "../lab3.c"
+ 1120              		.align	2
+ 1121              		.global	main
+ 1123              	main:
+ 1124              	.LFB0:
+   1:../lab3.c     **** /*-------------------------------------------------------------------
+   2:../lab3.c     **** **
+   3:../lab3.c     **** **  Fichero:
+   4:../lab3.c     **** **    lab3.c  24/2/2015
+   5:../lab3.c     **** **
+   6:../lab3.c     **** **    (c) J.M. Mendias
+   7:../lab3.c     **** **    Programación de Sistemas y Dispositivos
+   8:../lab3.c     **** **    Facultad de Informática. Universidad Complutense de Madrid
+   9:../lab3.c     **** **
+  10:../lab3.c     **** **  Propósito:
+  11:../lab3.c     **** **    Test del laboratorio 3
+  12:../lab3.c     **** **
+  13:../lab3.c     **** **  Notas de diseño:
+  14:../lab3.c     **** **
+  15:../lab3.c     **** **-----------------------------------------------------------------*/
+  16:../lab3.c     **** 
+  17:../lab3.c     **** #include <common_types.h>
+  18:../lab3.c     **** #include <system.h>
+  19:../lab3.c     **** #include <segs.h>
+  20:../lab3.c     **** #include <leds.h>
+  21:../lab3.c     **** 
+  22:../lab3.c     **** void one_second_loop( void );
+  23:../lab3.c     **** 
+  24:../lab3.c     **** void main( void ){
+ 1125              		.loc 1 24 0
+ 1126              		.cfi_startproc
+ 1127              		@ Function supports interworking.
+ 1128              		@ args = 0, pretend = 0, frame = 8
+ 1129              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1130 0000 0DC0A0E1 		mov	ip, sp
+ 1131              	.LCFI0:
+ 1132              		.cfi_def_cfa_register 12
+ 1133 0004 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 1134 0008 04B04CE2 		sub	fp, ip, #4
+ 1135              		.cfi_offset 14, -8
+ 1136              		.cfi_offset 13, -12
+ 1137              		.cfi_offset 11, -16
+ 1138              	.LCFI1:
+ 1139              		.cfi_def_cfa 11, 4
+ 1140 000c 08D04DE2 		sub	sp, sp, #8
+  25:../lab3.c     ****     uint8 i;
+  26:../lab3.c     ****     
+  27:../lab3.c     ****     sys_init();
+ 1141              		.loc 1 27 0
+ 1142 0010 FEFFFFEB 		bl	sys_init
+  28:../lab3.c     ****     segs_init();
+ 1143              		.loc 1 28 0
+ 1144 0014 FEFFFFEB 		bl	segs_init
+  29:../lab3.c     ****     leds_init();
+ 1145              		.loc 1 29 0
+ 1146 0018 FEFFFFEB 		bl	leds_init
+ 1147              	.L4:
+  30:../lab3.c     **** 
+  31:../lab3.c     ****     while( 1 ) 
+  32:../lab3.c     ****     {
+  33:../lab3.c     **** 
+  34:../lab3.c     ****         /************************************/
+  35:../lab3.c     **** 
+  36:../lab3.c     ****         led_on( RIGHT_LED );
+ 1148              		.loc 1 36 0
+ 1149 001c 0200A0E3 		mov	r0, #2
+ 1150 0020 FEFFFFEB 		bl	led_on
+  37:../lab3.c     ****         segs_putchar( led_status( RIGHT_LED ) );
+ 1151              		.loc 1 37 0
+ 1152 0024 0200A0E3 		mov	r0, #2
+ 1153 0028 FEFFFFEB 		bl	led_status
+ 1154 002c 0030A0E1 		mov	r3, r0
+ 1155 0030 0300A0E1 		mov	r0, r3
+ 1156 0034 FEFFFFEB 		bl	segs_putchar
+  38:../lab3.c     ****         one_second_loop();
+ 1157              		.loc 1 38 0
+ 1158 0038 FEFFFFEB 		bl	one_second_loop
+  39:../lab3.c     ****         led_off( RIGHT_LED );
+ 1159              		.loc 1 39 0
+ 1160 003c 0200A0E3 		mov	r0, #2
+ 1161 0040 FEFFFFEB 		bl	led_off
+  40:../lab3.c     ****         segs_putchar( led_status( RIGHT_LED ) );
+ 1162              		.loc 1 40 0
+ 1163 0044 0200A0E3 		mov	r0, #2
+ 1164 0048 FEFFFFEB 		bl	led_status
+ 1165 004c 0030A0E1 		mov	r3, r0
+ 1166 0050 0300A0E1 		mov	r0, r3
+ 1167 0054 FEFFFFEB 		bl	segs_putchar
+  41:../lab3.c     ****         one_second_loop();
+ 1168              		.loc 1 41 0
+ 1169 0058 FEFFFFEB 		bl	one_second_loop
+  42:../lab3.c     ****         led_on( LEFT_LED );
+ 1170              		.loc 1 42 0
+ 1171 005c 0100A0E3 		mov	r0, #1
+ 1172 0060 FEFFFFEB 		bl	led_on
+  43:../lab3.c     ****         segs_putchar( led_status( LEFT_LED ) );
+ 1173              		.loc 1 43 0
+ 1174 0064 0100A0E3 		mov	r0, #1
+ 1175 0068 FEFFFFEB 		bl	led_status
+ 1176 006c 0030A0E1 		mov	r3, r0
+ 1177 0070 0300A0E1 		mov	r0, r3
+ 1178 0074 FEFFFFEB 		bl	segs_putchar
+  44:../lab3.c     ****         one_second_loop();
+ 1179              		.loc 1 44 0
+ 1180 0078 FEFFFFEB 		bl	one_second_loop
+  45:../lab3.c     ****         led_off( LEFT_LED );
+ 1181              		.loc 1 45 0
+ 1182 007c 0100A0E3 		mov	r0, #1
+ 1183 0080 FEFFFFEB 		bl	led_off
+  46:../lab3.c     ****         segs_putchar( led_status( LEFT_LED ) );
+ 1184              		.loc 1 46 0
+ 1185 0084 0100A0E3 		mov	r0, #1
+ 1186 0088 FEFFFFEB 		bl	led_status
+ 1187 008c 0030A0E1 		mov	r3, r0
+ 1188 0090 0300A0E1 		mov	r0, r3
+ 1189 0094 FEFFFFEB 		bl	segs_putchar
+  47:../lab3.c     ****         one_second_loop();
+ 1190              		.loc 1 47 0
+ 1191 0098 FEFFFFEB 		bl	one_second_loop
+  48:../lab3.c     **** 
+  49:../lab3.c     ****         /************************************/
+  50:../lab3.c     **** 
+  51:../lab3.c     ****         for( i=0; i<16; i++ )
+ 1192              		.loc 1 51 0
+ 1193 009c 0030A0E3 		mov	r3, #0
+ 1194 00a0 0D304BE5 		strb	r3, [fp, #-13]
+ 1195 00a4 0A0000EA 		b	.L2
+ 1196              	.L3:
+  52:../lab3.c     ****         {
+  53:../lab3.c     ****             led_toggle( RIGHT_LED );
+ 1197              		.loc 1 53 0 discriminator 2
+ 1198 00a8 0200A0E3 		mov	r0, #2
+ 1199 00ac FEFFFFEB 		bl	led_toggle
+  54:../lab3.c     ****             led_toggle( LEFT_LED );
+ 1200              		.loc 1 54 0 discriminator 2
+ 1201 00b0 0100A0E3 		mov	r0, #1
+ 1202 00b4 FEFFFFEB 		bl	led_toggle
+  55:../lab3.c     ****             segs_putchar( i );
+ 1203              		.loc 1 55 0 discriminator 2
+ 1204 00b8 0D305BE5 		ldrb	r3, [fp, #-13]	@ zero_extendqisi2
+ 1205 00bc 0300A0E1 		mov	r0, r3
+ 1206 00c0 FEFFFFEB 		bl	segs_putchar
+  56:../lab3.c     ****             one_second_loop();
+ 1207              		.loc 1 56 0 discriminator 2
+ 1208 00c4 FEFFFFEB 		bl	one_second_loop
+  51:../lab3.c     ****         for( i=0; i<16; i++ )
+ 1209              		.loc 1 51 0 discriminator 2
+ 1210 00c8 0D305BE5 		ldrb	r3, [fp, #-13]
+ 1211 00cc 013083E2 		add	r3, r3, #1
+ 1212 00d0 0D304BE5 		strb	r3, [fp, #-13]
+ 1213              	.L2:
+  51:../lab3.c     ****         for( i=0; i<16; i++ )
+ 1214              		.loc 1 51 0 is_stmt 0 discriminator 1
+ 1215 00d4 0D305BE5 		ldrb	r3, [fp, #-13]	@ zero_extendqisi2
+ 1216 00d8 0F0053E3 		cmp	r3, #15
+ 1217 00dc F1FFFF9A 		bls	.L3
+  57:../lab3.c     ****         }
+  58:../lab3.c     ****         led_off( RIGHT_LED );
+ 1218              		.loc 1 58 0 is_stmt 1
+ 1219 00e0 0200A0E3 		mov	r0, #2
+ 1220 00e4 FEFFFFEB 		bl	led_off
+  59:../lab3.c     ****         led_off( LEFT_LED );
+ 1221              		.loc 1 59 0
+ 1222 00e8 0100A0E3 		mov	r0, #1
+ 1223 00ec FEFFFFEB 		bl	led_off
+  60:../lab3.c     **** 
+  61:../lab3.c     ****         /************************************/
+  62:../lab3.c     **** 
+  63:../lab3.c     ****     }
+ 1224              		.loc 1 63 0
+ 1225 00f0 C9FFFFEA 		b	.L4
+ 1226              		.cfi_endproc
+ 1227              	.LFE0:
+ 1229              		.align	2
+ 1230              		.global	one_second_loop
+ 1232              	one_second_loop:
+ 1233              	.LFB1:
+  64:../lab3.c     **** }
+  65:../lab3.c     **** 
+  66:../lab3.c     **** void one_second_loop( void )
+  67:../lab3.c     **** {
+ 1234              		.loc 1 67 0
+ 1235              		.cfi_startproc
+ 1236              		@ Function supports interworking.
+ 1237              		@ args = 0, pretend = 0, frame = 8
+ 1238              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1239 00f4 0DC0A0E1 		mov	ip, sp
+ 1240              	.LCFI2:
+ 1241              		.cfi_def_cfa_register 12
+ 1242 00f8 00D82DE9 		stmfd	sp!, {fp, ip, lr, pc}
+ 1243 00fc 04B04CE2 		sub	fp, ip, #4
+ 1244              		.cfi_offset 14, -8
+ 1245              		.cfi_offset 13, -12
+ 1246              		.cfi_offset 11, -16
+ 1247              	.LCFI3:
+ 1248              		.cfi_def_cfa 11, 4
+ 1249 0100 08D04DE2 		sub	sp, sp, #8
+  68:../lab3.c     ****     uint32 i;
+  69:../lab3.c     **** 
+  70:../lab3.c     ****     for( i=591436; i; i-- );
+ 1250              		.loc 1 70 0
+ 1251 0104 28309FE5 		ldr	r3, .L8
+ 1252 0108 10300BE5 		str	r3, [fp, #-16]
+ 1253 010c 020000EA 		b	.L6
+ 1254              	.L7:
+ 1255              		.loc 1 70 0 is_stmt 0 discriminator 2
+ 1256 0110 10301BE5 		ldr	r3, [fp, #-16]
+ 1257 0114 013043E2 		sub	r3, r3, #1
+ 1258 0118 10300BE5 		str	r3, [fp, #-16]
+ 1259              	.L6:
+ 1260              		.loc 1 70 0 discriminator 1
+ 1261 011c 10301BE5 		ldr	r3, [fp, #-16]
+ 1262 0120 000053E3 		cmp	r3, #0
+ 1263 0124 F9FFFF1A 		bne	.L7
+  71:../lab3.c     **** } 
+ 1264              		.loc 1 71 0 is_stmt 1
+ 1265 0128 0CD04BE2 		sub	sp, fp, #12
+ 1266 012c 00689DE8 		ldmfd	sp, {fp, sp, lr}
+ 1267 0130 1EFF2FE1 		bx	lr
+ 1268              	.L9:
+ 1269              		.align	2
+ 1270              	.L8:
+ 1271 0134 4C060900 		.word	591436
+ 1272              		.cfi_endproc
+ 1273              	.LFE1:
+ 1275              	.Letext0:
+DEFINED SYMBOLS
+                            *ABS*:00000000 lab3.c
+C:\Users\USUARI~1\AppData\Local\Temp\cchjZO2P.s:1120   .text:00000000 $a
+C:\Users\USUARI~1\AppData\Local\Temp\cchjZO2P.s:1123   .text:00000000 main
+C:\Users\USUARI~1\AppData\Local\Temp\cchjZO2P.s:1232   .text:000000f4 one_second_loop
+C:\Users\USUARI~1\AppData\Local\Temp\cchjZO2P.s:1271   .text:00000134 $d
+                     .debug_frame:00000010 $d
+
+UNDEFINED SYMBOLS
+sys_init
+segs_init
+leds_init
+led_on
+led_status
+segs_putchar
+led_off
+led_toggle
