@@ -1,36 +1,44 @@
-/*
+
 #include <s3c44b0x.h>
 #include <uart.h>
 
 void uart0_init( void )
 {  
-    UFCON0  = ...;	           // FIFOs activadas
-    UMCON0  = ...;	           // Control de flujo manual
-	ULCON0  = ...;       	   // normal (no infrarojos), sin paridad, 1 bit de stop, 8 bits de datos
-	UBRDIV0 = ...;             // 115200 bps asumiendo 64MHz
-    UCON0   = ...;             // Tx int/polling, Rx int/polling
+    UFCON0  = 0x1;	           // FIFOs activadas
+    UMCON0  = 0x0;	           // Control de flujo manual
+	ULCON0  = 0x3;       	   // normal (no infrarojos), sin paridad, 1 bit de stop, 8 bits de datos
+	UBRDIV0 = 0x22;             // 115200 bps asumiendo 64MHz
+    UCON0   = 0x5;             // Tx int/polling, Rx int/polling
 }
 
 void uart0_putchar( char ch )
 {
-    while( ... );
-    ... = ch;
+    while( (UFSTAT0 & 0xF0) == 1 );
+    UTXH0 = ch;
 }        
 
 char uart0_getchar( void )
 {
-    while( ... );
-    return ...;
+    while( (UFSTAT0 & 0xF) == 0);
+    return URXH0;
 }
 
 void uart0_puts( char *s )
 {
-    ...
+	int i = 0;
+    while (UTXH0 != '\0' ) {
+    	uart0_putchar(s[i]);
+    	i++;
+    }
 }
 
 void uart0_gets( char *s )
 {
-    ...
+	int i = 0;
+	while (URXH0 != '\0' ) {
+		s[i] = uart0_getchar();
+		i++;
+	}
 }
 
 void uart0_putint( int32 i )
@@ -39,14 +47,19 @@ void uart0_putint( int32 i )
 	char *p = buf + 10 + 1;
 
 	*p = '\0';
+	p--;
 
-	if( i >= 0 )
-	{
-        ...
+	while(i >= 0) {
+		*p = (i%10) + '0';
+		i = i/10;
+		p--;
 	}
-	else
-	{
-		...
+
+	if( i >= 0 ) {
+		p++;
+	}
+	else {
+		*p = '-';
 	}
 
 	uart0_puts( p );
@@ -86,9 +99,10 @@ int32 uart0_getint( void )
 		neg = TRUE;
 		p++;
 	}
-	while( *p ) 
-    {
-       ...
+	while( *p != '\0') {
+		acc *= 10;
+		acc += (*p - '0');
+		p++;
     }
 	if( neg )
 		acc = -acc;
@@ -113,4 +127,3 @@ uint32 uart0_gethex( void )
 
 	return acc;
 }
-*/
