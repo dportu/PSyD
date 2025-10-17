@@ -1,4 +1,3 @@
-/*
 #include <s3c44b0x.h>
 #include <s3cev40.h>
 #include <rtc.h>
@@ -31,47 +30,46 @@ void rtc_init( void )
 
 void rtc_puttime( rtc_time_t *rtc_time )
 {  
-    BCDYEAR = ...;
-    BCDMON  = ...;
-    BCDDAY  = ...;
-    BCDDATE = ...;
-    BCDHOUR = ...;
-    BCDMIN  = ...;
-    BCDSEC  = ...;
+	BCDYEAR = ((rtc_time->year/10)<<4) + rtc_time->year%10;
+	BCDMON  = ((rtc_time->mon/10)<<4) + rtc_time->mon%10;
+	BCDDAY  = ((rtc_time->mday/10)<<4) + rtc_time->mday%10;
+	BCDDATE = rtc_time->wday;
+	BCDHOUR = ((rtc_time->hour/10)<<4) + rtc_time->hour%10;
+	BCDMIN  = ((rtc_time->min/10)<<4) + rtc_time->min%10;
+	BCDSEC  = ((rtc_time->sec/10)<<4) + rtc_time->sec%10;
 }
 
 void rtc_gettime( rtc_time_t *rtc_time )
 {
-    rtc_time->year = ...;
-    rtc_time->mon  = ...;
-    rtc_time->mday = ...;
-    rtc_time->wday = ...;
-    rtc_time->hour = ...;
-    rtc_time->min  = ...;
-    rtc_time->sec  = ...;
-    if( ! rtc_time->sec ){
-        rtc_time->year = ...;
-        rtc_time->mon  = ...;
-        rtc_time->mday = ...;
-        rtc_time->wday = ...;
-        rtc_time->hour = ...;
-        rtc_time->min  = ...;
-        rtc_time->sec  = ...;
-    };
+	rtc_time->year = (BCDYEAR & 0xF) + (BCDYEAR >>4)*10;
+	rtc_time->mon  = (BCDMON & 0xF) + (BCDMON >>4)*10;
+	rtc_time->mday = (BCDDAY & 0xF) + (BCDDAY >>4)*10;
+	rtc_time->wday = BCDDATE;
+	rtc_time->hour = (BCDHOUR & 0xF) + (BCDHOUR >>4)*10;
+	rtc_time->min  = (BCDMIN & 0xF) + (BCDMIN >>4)*10;
+	rtc_time->sec  = (BCDSEC & 0xF) + (BCDSEC >>4)*10;
+	if( ! rtc_time->sec ){
+		rtc_time->year = (BCDYEAR & 0xF) + (BCDYEAR >>4)*10;
+		rtc_time->mon  = (BCDMON & 0xF) + (BCDMON >>4)*10;
+		rtc_time->mday = (BCDDAY & 0xF) + (BCDDAY >>4)*10;
+		rtc_time->wday = BCDDATE;
+		rtc_time->hour = (BCDHOUR & 0xF) + (BCDHOUR >>4)*10;
+		rtc_time->min  = (BCDMIN & 0xF) + (BCDMIN >>4)*10;
+		rtc_time->sec  = (BCDSEC & 0xF) + (BCDSEC >>4)*10;
+	};
 }
 
 void rtc_open( void (*isr)(void), uint8 tick_count )
 {
-    pISR_TICK = ...;
-    I_ISPC    = ...;
-    INTMSK   &= ...;
-    TICNT     = ...;
+    pISR_TICK = (uint32)isr;
+    I_ISPC    = BIT_TICK;
+    INTMSK   &= ~(BIT_GLOBAL | BIT_TICK);
+    TICNT     = (1 << 7) | (tick_count & 0x7F);
 }
 
 void rtc_close( void )
 {
-    TICNT     = ...;  
-    INTMSK   |= ...;    
-    pISR_TICK = ...;
+	TICNT     = 0x0;
+	INTMSK   |= ((1<<20));
+	pISR_TICK = (uint32) isr_TICK_dummy;
 }
-*/
