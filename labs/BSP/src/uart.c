@@ -13,7 +13,7 @@ void uart0_init( void )
 
 void uart0_putchar( char ch )
 {
-    while( (UFSTAT0 & 0xF0) == 1 );
+    while (UFSTAT0 & (1<<9));
     UTXH0 = ch;
 }        
 
@@ -37,21 +37,27 @@ void uart0_gets( char *s )
 	int i = 0;
 	char valor;
 
-	while ((valor = uart0_getchar()) != '\0' ) {
+	while ((valor = uart0_getchar()) != '\n' ) {
 		s[i] = valor;
 		i++;
 	}
+	s[i] = '\0';
 }
 
 void uart0_putint( int32 i )
 {
 	char buf[10 + 2];
 	char *p = buf + 10 + 1;
+	int negativo = (i < 0);
+	if (negativo) {
+		i = -i;
+	}
 
 	*p = '\0';
 	p--;
 	if(i == 0) {
-		*p = 0 + '0';
+		*p = '0';
+		p--;
 	}
 	while(i != 0) {
 		*p = (i%10) + '0';
@@ -59,7 +65,7 @@ void uart0_putint( int32 i )
 		p--;
 	}
 
-	if( i >= 0 ) {
+	if( !negativo ) {
 		p++;
 	}
 	else {
