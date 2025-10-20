@@ -1,4 +1,3 @@
-/*
 #include <s3c44b0x.h>
 #include <lcd.h>
 
@@ -53,7 +52,7 @@ uint8 lcd_status( void )
 
 void lcd_clear( void )
 {
-    ...
+    lcd_draw_box(0, 0, LCD_WIDTH - 1, LCD_HEIGHT - 1, WHITE, 1);
 }
 
 void lcd_putpixel( uint16 x, uint16 y, uint8 c)
@@ -80,17 +79,35 @@ uint8 lcd_getpixel( uint16 x, uint16 y )
 
 void lcd_draw_hline( uint16 xleft, uint16 xright, uint16 y, uint8 color, uint16 width )
 {
-    ...
+	uint16 k = 0;
+	uint16 i = xleft;
+
+    for(; k < width; k++) {
+    	for (; i < xright; i++){
+    	    lcd_putpixel(i, y, color);
+    	}
+    	y++;
+    }
 }
 
 void lcd_draw_vline( uint16 yup, uint16 ydown, uint16 x, uint8 color, uint16 width )
 {
-    ...
+	uint16 k = 0;
+	uint16 j = 0;
+
+	for(; k < width; k++) {
+		for (; j < ydown; j--){
+			lcd_putpixel(x, j, color);
+		}
+		x++;
+	}
 }
 
 void lcd_draw_box( uint16 xleft, uint16 yup, uint16 xright, uint16 ydown, uint8 color, uint16 width )
 {
-    ...
+	// for(uint16 k = 0; k < width; k++) {
+		lcd_draw_hline(xleft, xright, yup, color, ydown - yup);
+	// }
 }
 
 void lcd_putchar( uint16 x, uint16 y, uint8 color, char ch )
@@ -109,7 +126,11 @@ void lcd_putchar( uint16 x, uint16 y, uint8 color, char ch )
 
 void lcd_puts( uint16 x, uint16 y, uint8 color, char *s )
 {
-    ...
+	uint8 i = 0;
+    while (s[i] != '\0'){
+    	lcd_putchar(x + 8*i, y, color, s[i]);
+    	i++;
+    }
 }
 
 void lcd_putint( uint16 x, uint16 y, uint8 color, int32 i )
@@ -175,7 +196,11 @@ void lcd_putchar_x2( uint16 x, uint16 y, uint8 color, char ch )
 
 void lcd_puts_x2( uint16 x, uint16 y, uint8 color, char *s )
 {
-    ...
+	uint8 i = 0;
+	while (s[i] != '\0'){
+		lcd_putchar_x2(x + 16*i, y, color, s[i]);
+		i++;
+	}
 }
 
 void lcd_putint_x2( uint16 x, uint16 y, uint8 color, int32 i )
@@ -243,4 +268,3 @@ void lcd_putWallpaper( uint8 *bmp )
             lcd_buffer[offsetDst+x] = ~bmp[offsetSrc+x];
     }
 }
-*/
