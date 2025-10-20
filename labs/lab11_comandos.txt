@@ -2,5 +2,5 @@
 
 C:\software\electronica\ARM\EclipseARM\openocd-0.7.0\bin\openocd-0.7.0 ^ -f "C:\software\electronica\ARM\EclipseARM\openocd-0.7.0\scripts\test\arm-fdi-ucm.cfg" ^ -c "program lab11.hex 0x0"
 
-cd /d C:\software\electronica\ARM\EclipseARM  
+cd /d C:\software\electronica\ARM\EclipseARM\Repo
 C:\software\electronica\ARM\EclipseARM\openocd-0.7.0\bin\openocd-0.7.0 ^ -f "C:\software\electronica\ARM\EclipseARM\openocd-0.7.0\scripts\test\arm-fdi-ucm.cfg" ^ -c "program ROM_original.bin 0x0"
