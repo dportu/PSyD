@@ -52,17 +52,7 @@ uint8 lcd_status( void )
 
 void lcd_clear( void )
 {
-	/*uint16 i = 0;
-	for(; i < LCD_BUFFER_SIZE; i++){
-		lcd_buffer[i] = WHITE;
-	}*/
-
 	lcd_draw_hline(0, LCD_WIDTH, 0, WHITE, LCD_HEIGHT);
-
-	//uint16 i = 0;
-	//for(i = 0; i < LCD_HEIGHT; i++) {
-
-	//}
 }
 
 void lcd_putpixel( uint16 x, uint16 y, uint8 c)
@@ -279,3 +269,4 @@ void lcd_putWallpaper( uint8 *bmp )
             lcd_buffer[offsetDst+x] = ~bmp[offsetSrc+x];
     }
 }
+
