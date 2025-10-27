@@ -52,7 +52,17 @@ uint8 lcd_status( void )
 
 void lcd_clear( void )
 {
-    lcd_draw_box(0, 0, LCD_WIDTH - 1, LCD_HEIGHT - 1, WHITE, 1);
+	/*uint16 i = 0;
+	for(; i < LCD_BUFFER_SIZE; i++){
+		lcd_buffer[i] = WHITE;
+	}*/
+
+	lcd_draw_hline(0, LCD_WIDTH, 0, WHITE, LCD_HEIGHT);
+
+	//uint16 i = 0;
+	//for(i = 0; i < LCD_HEIGHT; i++) {
+
+	//}
 }
 
 void lcd_putpixel( uint16 x, uint16 y, uint8 c)
@@ -79,35 +89,36 @@ uint8 lcd_getpixel( uint16 x, uint16 y )
 
 void lcd_draw_hline( uint16 xleft, uint16 xright, uint16 y, uint8 color, uint16 width )
 {
-	uint16 k = 0;
-	uint16 i = xleft;
+	uint16 k = 0, i;
+	uint16 grosor = y;
 
     for(; k < width; k++) {
-    	for (; i < xright; i++){
-    	    lcd_putpixel(i, y, color);
+    	for (i = xleft; i <= xright; i++){
+    	    lcd_putpixel(i, grosor, color);
     	}
-    	y++;
+    	grosor++;
     }
 }
 
 void lcd_draw_vline( uint16 yup, uint16 ydown, uint16 x, uint8 color, uint16 width )
 {
-	uint16 k = 0;
-	uint16 j = 0;
+	uint16 k = 0, j;
+	uint16 grosor = x;
 
 	for(; k < width; k++) {
-		for (; j < ydown; j--){
-			lcd_putpixel(x, j, color);
+		for (j = yup; j <= ydown; j++){
+			lcd_putpixel(grosor, j, color);
 		}
-		x++;
+		grosor++;
 	}
 }
 
 void lcd_draw_box( uint16 xleft, uint16 yup, uint16 xright, uint16 ydown, uint8 color, uint16 width )
 {
-	// for(uint16 k = 0; k < width; k++) {
-		lcd_draw_hline(xleft, xright, yup, color, ydown - yup);
-	// }
+	lcd_draw_hline(xleft, xright, yup, color, width);
+	lcd_draw_hline(xleft,xright,ydown,color,width);
+	lcd_draw_vline(yup,ydown,xleft,color,width);
+	lcd_draw_vline(yup,ydown+width-1,xright,color,width);
 }
 
 void lcd_putchar( uint16 x, uint16 y, uint8 color, char ch )
