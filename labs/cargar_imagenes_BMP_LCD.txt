@@ -1,0 +1,5 @@
+En la consola del debug (arm-none-eabi-ghb)
+pwd
+cd C:\Users\usuario_local\Downloads\PSyD\bmp320x240
+pwd
+source load_bmp.txt
