@@ -1,4 +1,3 @@
-/*
 #include <s3c44b0x.h>
 #include <s3cev40.h>
 #include <timers.h>
@@ -47,12 +46,12 @@ void timer3_delay_ms( uint16 n )
 {
     for( ; n; n-- )
     {
-    	TCFG0 = (TCFG0 & ~(0xff << 8)) | ...;
-    	TCFG1 = (TCFG1 & ~(0xf << 12)) | ...; 
-		TCNTB3 = ...;
+    	TCFG0 = (TCFG0 & ~(0xff << 8)); // N = 0
+    	TCFG1 = (TCFG1 & ~(0xf << 12)); // D = 2
+		TCNTB3 = 32000;
     	
-    	TCON = (TCON & ~(0xf << 16)) | ...; 
-    	TCON = (TCON & ~(0xf << 16)) | ...; 
+    	TCON = (TCON & ~(0xf << 16)) | (1 << 17);
+    	TCON = (TCON & ~(0xf << 16)) | (1 << 16);
     	
     	while( !TCNTO3 );
        	while( TCNTO3 );
@@ -70,15 +69,15 @@ void timer3_delay_s( uint16 n )
 {
 	for( ; n; n-- )
 	{  
-    	TCFG0 = ...;    	
-		TCFG1 = ...; 
-		TCNTB3 = ...;
+		TCFG0 = (TCFG0 & ~(0xff << 8)) | (63 << 8);
+		TCFG1 = (TCFG1 & ~(0xf << 12)) | (4 << 12);
+		TCNTB3 = 31250;
 
-    	TCON = ...;
-    	TCON = ...; 
+		TCON = (TCON & ~(0xf << 16)) | (1 << 17);
+		TCON = (TCON & ~(0xf << 16)) | (1 << 16);
 
-    	while( ... );
-    	while( ... );
+		while( !TCNTO3 );
+		while( TCNTO3 );
     }
 }
 
@@ -124,9 +123,9 @@ uint16 timer3_timeout( )
 
 void timer0_open_tick( void (*isr)(void), uint16 tps )
 {
-    pISR_TIMER0 = ...;
-    I_ISPC      = ...;
-    INTMSK     &= ...;
+    pISR_TIMER0 = isr;
+    I_ISPC      = (I_ISPC | (1 << 13));
+    INTMSK     &= ~(1 << 26);
 
     if( tps > 0 && tps <= 10 ) {
         TCFG0  = ...;
@@ -152,10 +151,11 @@ void timer0_open_tick( void (*isr)(void), uint16 tps )
 
 void timer0_open_ms( void (*isr)(void), uint16 ms, uint8 mode )
 {
-    pISR_TIMER0 = ...;
-    I_ISPC      = ...;
-    INTMSK     &= ...;
+    pISR_TIMER0 = isr;
+    I_ISPC      = (I_ISPC | (1 << 13));
+    INTMSK     &= ~(1 << 26);
 
+    //calcular N y D para resolucion = 100 micro segundos
     TCFG0 = ...;
     TCFG1 = ...;
     TCNTB0 = 10*ms;
@@ -166,13 +166,11 @@ void timer0_open_ms( void (*isr)(void), uint16 ms, uint8 mode )
 
 void timer0_close( void )
 {
-    TCNTB0 = ...;
-    TCMPB0 = ...;
-
-    TCON = ...;
-    TCON = ...;
+    TCNTB0 = 0;
+    TCMPB0 = 0;
+    TCON = (TCON & ~(0xf << 0)) | (1 << 1);
+    TCON = (TCON & ~(0xf << 0)) | 1;
     
-    INTMSK     |= ...;
-    pISR_TIMER0 = ...;
+    INTMSK     |= (1 << 26);
+    pISR_TIMER0 = isr_TIMER0_dummy(); // ni de coña
 }
-*/
