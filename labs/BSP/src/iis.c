@@ -1,4 +1,3 @@
-/*
 #include <s3c44b0x.h>
 #include <s3cev40.h>
 #include <iis.h>
@@ -38,14 +37,14 @@ static void isr_bdma0( void )
 
 inline void iis_putSample( int16 ch0, int16 ch1 )
 {
-    while( ... );
+    while( ((IISFCON & 0xf0) >> 4) > 6 );
     IISFIF = ch0;
     IISFIF = ch1;
 }
 
 inline void iis_getSample( int16 *ch0, int16 *ch1 )
 {
-    while( ... );
+    while( (IISFCON & 0xf) < 2 );
     *ch0 = IISFIF;
     *ch1 = IISFIF;
 }
@@ -85,12 +84,12 @@ void iis_rec( int16 *buffer, uint32 length )
     int16 ch1, ch2;
 
     if( iomode == IIS_POLLING )
-        for( i=0; i<length/2; )
-        {
-            ...
+        for( i=0; i<length/2; ) {
+        	iis_getSample( &ch1, &ch2 );
+			buffer[i++] = ch1;
+			buffer[i++] = ch2;
         }
-    if( iomode == IIS_DMA )
-    {
+    if( iomode == IIS_DMA ) {
         while( IISCON & 1  );
 
         BDISRC0  = (1 << 30) | (3 << 28) | (uint32) &IISFIF;
@@ -106,12 +105,12 @@ void iis_rec( int16 *buffer, uint32 length )
 
 void iis_pause( void )
 {
-    ...
+	IISCON &= ~(1);
 }
 
 void iis_continue( void )
 {
-    ...
+	IISCON  |= (1);
 }
 
 uint8 iis_status( void )
@@ -130,10 +129,9 @@ void iis_playWawFile( int16 *wav, uint8 loop )
         p++;
     p += 4;
 
-    size = p[0] + (p[1] << 8) + (p[2] << 16) + (p[3] << 24); // los datos de cabecera están en little-endian
+    size = p[0] + (p[1] << 8) + (p[2] << 16) + (p[3] << 24); // los datos de cabecera estÃ¡n en little-endian
     p += 4;
 
     iis_play( (int16 *)p, size, loop );
 
 }
-*/
