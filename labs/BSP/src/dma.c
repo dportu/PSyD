@@ -1,4 +1,3 @@
-/*
 #include <s3c44b0x.h>
 #include <s3cev40.h>
 #include <dma.h>
@@ -25,4 +24,3 @@ void bdma0_close( void )
 	INTMSK   |= BIT_BDMA0;
 	pISR_BDMA1 = (uint32) isr_BDMA0_dummy;
 }
-*/

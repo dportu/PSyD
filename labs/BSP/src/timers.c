@@ -125,23 +125,23 @@ void timer0_open_tick( void (*isr)(void), uint16 tps )
 {
     pISR_TIMER0 = isr;
     I_ISPC      = (I_ISPC | (1 << 13));
-    INTMSK     &= ~(1 << 26);
+    INTMSK     &= ~((BIT_TIMER0)|(BIT_GLOBAL));
 
     if( tps > 0 && tps <= 10 ) {
-        TCFG0  = ...;
-        TCFG1  = ...;
+        TCFG0  = (TCFG0 & ~(0xff)) | 0xC7; // N = 199
+        TCFG1  = (TCFG1 & ~(0xf)) | 0x2; // 0010 = 1/8
         TCNTB0 = (40000U / tps);
     } else if( tps > 10 && tps <= 100 ) {
-        TCFG0  = ...;
-        TCFG1  = ...;
+    	TCFG0  = (TCFG0 & ~(0xff)) | (0x9); // N=9
+    	TCFG1  = (TCFG1 & ~(0xf)) | (0x3); // D=16
         TCNTB0 = (400000U / (uint32) tps);
     } else if( tps > 100 && tps <= 1000 ) {
-        TCFG0  = ...;
-        TCFG1  = ...;
+    	TCFG0  = (TCFG0 & ~(0xff)) | (0x1); // N=1
+    	TCFG1  = (TCFG1 & ~(0xf)) | (0x2); // D=8
         TCNTB0 = (4000000U / (uint32) tps);
     } else if ( tps > 1000 ) {
-        TCFG0  = ...;
-        TCFG1  = ...;
+    	TCFG0  = (TCFG0 & ~(0xff)); // N=0
+    	TCFG1  = (TCFG1 & ~(0xf)); // D=2
         TCNTB0 = (32000000U / (uint32) tps);
     }
 
@@ -153,11 +153,11 @@ void timer0_open_ms( void (*isr)(void), uint16 ms, uint8 mode )
 {
     pISR_TIMER0 = isr;
     I_ISPC      = (I_ISPC | (1 << 13));
-    INTMSK     &= ~(1 << 26);
+    INTMSK     &= ~((BIT_TIMER0)|(BIT_GLOBAL));
 
     //calcular N y D para resolucion = 100 micro segundos
-    TCFG0 = ...;
-    TCFG1 = ...;
+    TCFG0  = (TCFG0 & ~(0xff)) | (0xC7); // N=199
+    TCFG1  = (TCFG1 & ~(0xf)) | (0x4); // D=32
     TCNTB0 = 10*ms;
 
     TCON = (TCON & ~(0xf << 0)) | (mode << 3) | (1 << 1); 
@@ -172,5 +172,5 @@ void timer0_close( void )
     TCON = (TCON & ~(0xf << 0)) | 1;
     
     INTMSK     |= (1 << 26);
-    pISR_TIMER0 = isr_TIMER0_dummy(); // ni de coña
+    pISR_TIMER0 = isr_TIMER0_dummy;
 }

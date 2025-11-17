@@ -1,4 +1,3 @@
-/*
 #include <s3c44b0x.h>
 #include <l3.h>
 #include <leds.h>
@@ -39,4 +38,3 @@ void L3_putByte( uint8 byte, uint8 mode )
     }
     PDATB = (rled << 10) | (lled << 9) | (1 << 5) | (1 << 4); 
 }
-*/
