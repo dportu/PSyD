@@ -17,8 +17,8 @@ void hiScore_init( HiScore *self )
 
 static void hiScore_draw( HiScore *self )
 {
-	lcd_puts( self->col, self->row, BLACK, "HI-SCORE: " );
-	lcd_putint( (self->col + 10*FONT_WIDTH), self->row, BLACK, self->value );
+	lcd_puts( 1, self->row, BLACK, "HI-SCORE: " );
+	lcd_putint(self->col, self->row, BLACK, self->value );
 }
 
 void hiScore_launch( HiScore *self )

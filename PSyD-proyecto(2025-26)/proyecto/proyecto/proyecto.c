@@ -63,7 +63,13 @@ void main( void )
 
     scheduler_init();                                           /* Inicializa el kernel */
     create_task( pbs_read_task, PBS_READ_PERIOD/TICK_PERIOD );  /* Crea las tareas de la aplicación */
+    create_task( ufo_launch_task, UFO_LAUNCH_PERIOD/TICK_PERIOD ); 	/* Crea la tarea del UFO */
+    create_task( ufo_update_task, UFO_UPDATE_PERIOD/TICK_PERIOD );	/* Mueve el UFO */
+    create_task( player_update_task, PLAYER_UPDATE_PERIOD/TICK_PERIOD );
+    create_task( keys_read_task, KEYS_READ_PERIOD/TICK_PERIOD );
     /* no olvidar crear resto de tareas */
+
+
 
     while( 1 )
     {
@@ -71,8 +77,14 @@ void main( void )
         game_launch( &game );                                    /* Lanza el juego */
 
         timer0_open_tick( scheduler, TICKS_PER_SEC );            /* Arranca multitarea */
+
+
+
+
         while( game.credit.value < 3 )
         {
+
+
             /* sleep(); */  // descomentar cuando funcione
             dispacher();
         }
@@ -85,11 +97,12 @@ void main( void )
 
 void player_update_task( void )
 {
+	player_update(&game.player);
 }
 
 void ufo_launch_task( void )
 {   
-    if( random_get() & 0x1 )                                      /* Lanza UFOs con probabilidad del 50% */
+     if( random_get() & 0x1 )                                      /* Lanza UFOs con probabilidad del 50% */
         ufo_launch( &game.ufo );
 }
 
@@ -116,6 +129,38 @@ void enemyShot_launch_task( void )
 
 void keys_read_task( void )
 {
+	// TODO: modificar para saber cual se esta pulsando
+	static boolean init = TRUE;
+	    static enum { wait_keydown, scan, wait_keyup } state;
+
+	    if( init )
+	    {
+	        init  = FALSE;
+	        state = wait_keydown;
+	    }
+	    else switch( state )
+	    {
+	        case wait_keydown:
+	            if( pb_pressed() )
+	                state = scan;
+	            break;
+	        case scan:
+	            switch( pb_scan() )
+	            {
+	                case PB_RIGHT:
+	                case PB_LEFT:
+	                    credit_update( &game.credit, 1 );
+	                    state = wait_keyup;
+	                    break;
+	                default:
+	                    state = wait_keyup;
+	            }
+	            break;
+	        case wait_keyup:
+	            if( !pb_pressed() )
+	                state = wait_keydown;
+	            break;
+	    }
 }
 
 void pbs_read_task( void )

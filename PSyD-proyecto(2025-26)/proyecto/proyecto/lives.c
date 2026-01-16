@@ -13,8 +13,8 @@ void lives_init( Lives *self )
 
 static void lives_draw( Lives *self )
 {
-    lcd_puts( self->col, self->row, BLACK, "LIVES: " );
-    lcd_putint( (self->col + 7*FONT_WIDTH), self->row, BLACK, self->value );
+    lcd_puts( self->col - 8*FONT_WIDTH*2, self->row, BLACK, "LIVES: " );
+    lcd_putint( self->col, self->row, BLACK, self->value );
 }
 
 void lives_launch( Lives *self )

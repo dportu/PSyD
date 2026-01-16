@@ -14,8 +14,8 @@ void score_init( Score *self )
 
 void score_draw( Score *self )
 {
-    lcd_puts( self->col, self->row, BLACK, "SCORE: " );
-    lcd_putint( (self->col + 7*FONT_WIDTH), self->row, BLACK, self->value );
+    lcd_puts( self->col - 8*FONT_WIDTH*2, self->row, BLACK, "SCORE: " );
+    lcd_putint( self->col, self->row, BLACK, self->value );
 }
 
 void score_launch( Score *self )

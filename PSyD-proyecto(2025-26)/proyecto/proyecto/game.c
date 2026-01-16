@@ -33,5 +33,14 @@ void game_restart( Game *self )
 
 void game_launch( Game *self )
 {
-   credit_launch( &self->credit );
+	hiScore_launch(&self->hiScore); 	// draw hiscore
+	score_launch(&self->player.score); // draw score
+	lives_launch(&self->player.lives);	// draw lives
+
+	int i = 0;
+	for(; i < MAX_SHIELDS; i++) { // pintamos cada escudo
+		shield_launch(&self->shield[i]);
+	}
+
+	credit_launch( &self->credit );
 }

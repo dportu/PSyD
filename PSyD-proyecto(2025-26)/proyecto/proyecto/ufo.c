@@ -43,6 +43,8 @@ static void ufo_clear( Ufo *self )
     switch( self->state )
     {
         case ufoMovingLeft:
+        	sprite_clear( &self->sprite, self->col, self->row );
+			break;
         case ufoMovingRight:
             sprite_clear( &self->sprite, self->col, self->row );
             break;

@@ -11,5 +11,5 @@ void shield_init( Shield *self, uint16 col )
 
 void shield_launch( Shield *self )
 {
-    sprite_draw( self->sprite, self->col, self->row );
+	sprite_draw( &self->sprite, self->col, self->row );
 }
