@@ -22,35 +22,35 @@ void player_init( Player *self )
 
 static void player_draw( Player *self )
 { 
-	sprite_draw(&self, self->col, self->row);
+	sprite_draw(&self->sprite, self->col, self->row);
 }
 
 static void player_clear( Player *self )
 {
-	sprite_clear(&self, self->col, self->row);
+	sprite_clear(&self->sprite, self->col, self->row);
 }
 
 void player_launch( Player *self )
 {
-
+	player_draw(self);
 }
 
 void player_update( Player *self )
 {
-	sprite_clear(&self, self->col, self->row);
+	player_clear(self);
 
 	player_state_t s = self->state;
 	switch (s) {
 	case playerStopped:
 		break;
 	case playerMovingLeft:
-		if(self->row - PLAYER_WIDTH >= PLAYER_MIN_COL) {
-			self->row -= PLAYER_WIDTH;
+		if(self->col - PLAYER_ADVANCE_COL >= PLAYER_MIN_COL) {
+			self->col -= PLAYER_ADVANCE_COL;
 		}
 		break;
 	case playerMovingRight:
-		if(self->row - PLAYER_WIDTH < PLAYER_MAX_COL) {
-			self->row += PLAYER_WIDTH;
+		if(self->col - PLAYER_ADVANCE_COL < PLAYER_MAX_COL) {
+			self->col += PLAYER_ADVANCE_COL;
 		}
 		break;
 	case playerExploding:
@@ -61,12 +61,14 @@ void player_update( Player *self )
 		break;
 	}
 
-	sprite_draw(&self, self->col, self->row);
+	player_draw(self);
 }
 
 void player_left( Player *self )
 {
-	self->state = playerMovingLeft;
+	if(self->state != playerDead) {
+		self->state = playerMovingLeft;
+	}
 
 }
 
@@ -85,7 +87,7 @@ void player_stop( Player *self )
 
 void player_hit( Player *self )
 {
-	if((--self->lives) < 1) {
+	if((--self->lives.value) < 1) {
 		self->state = playerDead;
 	}
 }

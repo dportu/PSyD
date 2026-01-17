@@ -54,8 +54,6 @@ static void ufo_clear( Ufo *self )
         case ufoScoring:
             lcd_putint( (self->col+6)*2, UFO_ROW*2, WHITE, self->score );
             break;
-        case noUfo:
-            break;
     }          
 }
 
@@ -81,29 +79,23 @@ void ufo_launch( Ufo *self )
 
 void ufo_update( Ufo *self )
 {
-    switch( self->state )
-    {
+
+    ufo_clear( self );
+
+    switch( self->state ) {
         case ufoMovingLeft:
-            ufo_clear( self );
-            if( (self->col - UFO_ADVANCE_COL) >= UFO_MIN_COL )
-            {
+            if( (self->col - UFO_ADVANCE_COL) >= UFO_MIN_COL ) {
                 self->col -= UFO_ADVANCE_COL;
-                ufo_draw( self );
             }
-            else
-            {
+            else {
                 self->state  = noUfo;
             }
             break;
         case ufoMovingRight:
-            ufo_clear( self );
-            if( (self->col + UFO_ADVANCE_COL) < UFO_MAX_COL )
-            {
+            if( (self->col + UFO_ADVANCE_COL) < UFO_MAX_COL ) {
                 self->col += UFO_ADVANCE_COL;
-                ufo_draw( self );
             }
-            else
-            {
+            else {
                 self->state  = noUfo;
             }
             break;
@@ -117,16 +109,18 @@ void ufo_update( Ufo *self )
             if (--self->countDown == 0) {
                 self->state  = noUfo;
             }
+            // TODO: hacer que se sume el score de la partida
             break;
-        case noUfo:
-            break;
-    }     
+    }
+
+
+    ufo_draw( self );
 }
 
 void ufo_hit( Ufo *self )
 {
     ufo_clear( self );
-    self->countDown = UFO_EXPLODING_TIME/UFO_UPDATE_PERIOD;
+    self->countDown = UFO_EXPLODING_TIME/UFO_UPDATE_PERIOD; // TODO: hacer que no dure tanto
     self->state = ufoExploding;   
     ufo_draw( self );
     sound_play( &self->explosionSound );
